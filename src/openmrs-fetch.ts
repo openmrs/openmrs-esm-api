@@ -29,7 +29,7 @@ export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
     fetchInit.headers = {};
   }
 
-  /* Automatically stringify javascript objects being seint in the
+  /* Automatically stringify javascript objects being sent in the
    * request body.
    */
   if (isPlainObject(fetchInit.body)) {
