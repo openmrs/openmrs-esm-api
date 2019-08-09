@@ -77,9 +77,8 @@ export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
        */
 
       // Attempt to download a response body, if it has one
-      return response
-        .text()
-        .then(responseText => {
+      return response.text().then(
+        responseText => {
           let responseBody = responseText;
           try {
             responseBody = JSON.parse(responseText);
@@ -96,17 +95,14 @@ export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
             responseBody,
             requestStacktrace
           );
-        })
-        .catch(err => {
-          if (!(err instanceof OpenmrsFetchError)) {
-            /* We weren't able to download a response body for this error.
-             * Time to just give the best possible stacktrace and error message.
-             */
-            throw new OpenmrsFetchError(url, response, null, requestStacktrace);
-          } else {
-            throw err;
-          }
-        });
+        },
+        err => {
+          /* We weren't able to download a response body for this error.
+           * Time to just give the best possible stacktrace and error message.
+           */
+          throw new OpenmrsFetchError(url, response, null, requestStacktrace);
+        }
+      );
     }
   });
 }
