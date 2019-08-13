@@ -15,7 +15,7 @@ const openmrsFhirAdapter = {
         return {
           status: response.status,
           headers: response.headers,
-          data: response.body,
+          data: response.data,
           config: requestObj
         };
       },
@@ -23,7 +23,7 @@ const openmrsFhirAdapter = {
         return {
           status: err.response.status,
           headers: err.response.headers,
-          data: err.response.body,
+          data: err.responseBody,
           config: requestObj
         };
       }
