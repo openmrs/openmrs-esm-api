@@ -2,7 +2,6 @@ import makeFhir from "fhir.js/src/fhir.js";
 import { openmrsFetch, FetchHeaders, OpenmrsFetchError } from "./openmrs-fetch";
 
 const fhirConfig = {
-  // @ts-ignore
   baseUrl: `/ws/fhir`
 };
 
@@ -32,7 +31,6 @@ const openmrsFhirAdapter = {
   }
 };
 
-// TODO
 export const fhir = makeFhir(fhirConfig, openmrsFhirAdapter);
 
 type FHIRRequestObj = {
