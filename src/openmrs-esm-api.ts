@@ -1,2 +1,2 @@
-export { authenticatedFetch } from "./authenticated-fetch";
+export { openmrsFetch } from "./openmrs-fetch";
 export { fhir } from "./fhir";
