@@ -1,6 +1,9 @@
 import isPlainObject from "lodash-es/isPlainObject";
 
-export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
+export function openmrsFetch(
+  url: string,
+  fetchInit: FetchConfig = {}
+): Promise<FetchResponse> {
   if (typeof url !== "string") {
     throw Error(
       "The first argument to @openmrs/api's openmrsFetch function must be a url string or Request object"
@@ -57,17 +60,22 @@ export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
    */
   const requestStacktrace = Error();
 
-  return window.fetch(url, fetchInit as RequestInit).then(response => {
+  return window.fetch(url, fetchInit as RequestInit).then(r => {
+    const response = r as FetchResponse;
     if (response.ok) {
       if (response.status === 204) {
         /* HTTP 204 - No Content
          * We should not try to download the empty response as json. Instead,
          * we return null since there is no response body.
          */
-        return null;
+        response.data = null;
+        return response;
       } else {
         // HTTP 200s - The request succeeded
-        return response.json();
+        return response.json().then(body => {
+          response.data = body;
+          return response;
+        });
       }
     } else {
       /* HTTP response status is not in 200s. Usually this will mean
@@ -107,7 +115,7 @@ export function openmrsFetch(url: string, fetchInit: FetchConfig = {}) {
   });
 }
 
-class OpenmrsFetchError extends Error {
+export class OpenmrsFetchError extends Error {
   constructor(
     url: string,
     response: Response,
@@ -118,9 +126,15 @@ class OpenmrsFetchError extends Error {
     this.message = `Server responded with ${response.status} (${response.statusText}) for url ${url}. Check err.responseBody or network tab in dev tools for more info`;
     requestStacktrace.message = this.message;
     this.responseBody = responseBody;
+    this.response = response;
     this.stack = `Stacktrace for outgoing request:\n${requestStacktrace.stack}\nStacktrace for incoming response:\n${this.stack}`;
   }
+  response: Response;
   responseBody: string | FetchResponseJson | null;
+}
+
+interface FetchResponse extends Response {
+  data: any | null;
 }
 
 interface FetchConfig extends Omit<Omit<RequestInit, "body">, "headers"> {
@@ -130,7 +144,7 @@ interface FetchConfig extends Omit<Omit<RequestInit, "body">, "headers"> {
 
 type ResponseBody = string | FetchResponseJson;
 
-interface FetchHeaders {
+export interface FetchHeaders {
   [key: string]: string | null;
 }
 
