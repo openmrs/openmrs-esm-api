@@ -72,8 +72,8 @@ export function openmrsFetch(
         return response;
       } else {
         // HTTP 200s - The request succeeded
-        return response.json().then(body => {
-          response.data = body;
+        return response.json().then(data => {
+          response.data = data;
           return response;
         });
       }
