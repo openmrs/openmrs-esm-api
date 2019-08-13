@@ -123,8 +123,6 @@ class OpenmrsFetchError extends Error {
   responseBody: string | FetchResponseJson | null;
 }
 
-type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>;
-
 interface FetchConfig extends Omit<Omit<RequestInit, "body">, "headers"> {
   headers?: FetchHeaders;
   body?: FetchBody | string;
