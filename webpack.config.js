@@ -24,6 +24,7 @@ module.exports = {
   },
   plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
   devServer: {
+    disableHostCheck: true,
     headers: {
       "Access-Control-Allow-Origin": "*"
     }

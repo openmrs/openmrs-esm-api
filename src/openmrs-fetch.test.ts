@@ -98,8 +98,9 @@ describe("openmrsFetch", () => {
       })
     );
 
-    return openmrsFetch("/ws/rest/v1/session").then(data => {
-      expect(data).toEqual({ value: "hi" });
+    return openmrsFetch("/ws/rest/v1/session").then(response => {
+      expect(response.status).toBe(200);
+      expect(response.data).toEqual({ value: "hi" });
     });
   });
 
@@ -113,8 +114,9 @@ describe("openmrsFetch", () => {
       })
     );
 
-    return openmrsFetch("/ws/rest/v1/session").then(data => {
-      expect(data).toEqual(null);
+    return openmrsFetch("/ws/rest/v1/session").then(response => {
+      expect(response.status).toBe(204);
+      expect(response.data).toEqual(null);
     });
   });
 
@@ -144,6 +146,7 @@ describe("openmrsFetch", () => {
         );
         expect(err.message).toMatch(/\/ws\/rest\/v1\/session/);
         expect(err.responseBody).toEqual({ error: "The server is dead" });
+        expect(err.response.status).toBe(500);
       });
   });
 
@@ -168,6 +171,7 @@ describe("openmrsFetch", () => {
         );
         expect(err.message).toMatch(/\/ws\/rest\/v1\/session/);
         expect(err.responseBody).toEqual("a string response body");
+        expect(err.response.status).toBe(400);
       });
   });
 });
