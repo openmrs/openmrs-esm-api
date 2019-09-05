@@ -14,7 +14,7 @@ export function getCurrentUser(opts: CurrentUserOptions = {}) {
   );
 }
 
-export function refetchUser() {
+export function refetchCurrentUser() {
   userSubject.next(openmrsObservableFetch("/ws/rest/v1/session"));
 }
 
