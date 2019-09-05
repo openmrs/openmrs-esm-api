@@ -58,6 +58,7 @@
   },
   "dependencies": {
     "fhir.js": "0.0.20",
-    "lodash-es": "^4.17.15"
+    "lodash-es": "^4.17.15",
+    "rxjs": "^6.5.3"
   }
 }

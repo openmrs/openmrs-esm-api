@@ -1,4 +1,5 @@
-import { openmrsFetch } from "./openmrs-fetch";
+import { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
+import { isObservable } from "rxjs";
 
 describe("openmrsFetch", () => {
   beforeEach(() => {
@@ -173,5 +174,62 @@ describe("openmrsFetch", () => {
         expect(err.responseBody).toEqual("a string response body");
         expect(err.response.status).toBe(400);
       });
+  });
+});
+
+describe("openmrsObservableFetch", () => {
+  beforeEach(() => {
+    // @ts-ignore
+    window.openmrsBase = "/openmrs";
+    window.fetch = jest.fn();
+  });
+
+  it(`calls window.fetch with the correct arguments for a basic GET request`, done => {
+    // @ts-ignore
+    window.fetch.mockReturnValue(
+      Promise.resolve({
+        ok: true,
+        status: 200,
+        json: () => Promise.resolve({ value: "hi" })
+      })
+    );
+
+    const observable = openmrsObservableFetch("/ws/rest/v1/session");
+    expect(isObservable(observable)).toBe(true);
+
+    observable.subscribe(
+      response => {
+        expect(response.data).toEqual({ value: "hi" });
+        done();
+      },
+      err => {
+        fail(err);
+      }
+    );
+
+    expect(window.fetch).toHaveBeenCalled();
+    // @ts-ignore
+    expect(window.fetch.mock.calls[0][0]).toEqual(
+      "/openmrs/ws/rest/v1/session"
+    );
+    // @ts-ignore
+    expect(window.fetch.mock.calls[0][1].headers.Accept).toEqual(
+      "application/json"
+    );
+  });
+
+  it(`aborts the fetch request when subscription is unsubscribed`, () => {
+    // @ts-ignore
+    window.fetch.mockReturnValue(new Promise(() => {}));
+
+    const subscription = openmrsObservableFetch(
+      "/ws/rest/v1/session"
+    ).subscribe();
+    // @ts-ignore
+    const abortSignal: AbortSignal = window.fetch.mock.calls[0][1].signal;
+    expect(abortSignal.aborted).toBe(false);
+
+    subscription.unsubscribe();
+    expect(abortSignal.aborted).toBe(true);
   });
 });
