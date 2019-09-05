@@ -122,7 +122,7 @@ export function openmrsObservableFetch(
 ) {
   if (typeof fetchInit !== "object") {
     throw Error(
-      "The second argument to openmrsObservableFetch must be either omitted or be an object"
+      "The second argument to openmrsObservableFetch must be either omitted or an object"
     );
   }
 
