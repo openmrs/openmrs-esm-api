@@ -1,4 +1,5 @@
 import isPlainObject from "lodash-es/isPlainObject";
+import { Observable } from "rxjs";
 
 export function openmrsFetch(
   url: string,
@@ -6,7 +7,7 @@ export function openmrsFetch(
 ): Promise<FetchResponse> {
   if (typeof url !== "string") {
     throw Error(
-      "The first argument to @openmrs/api's openmrsFetch function must be a url string or Request object"
+      "The first argument to @openmrs/api's openmrsFetch function must be a url string"
     );
   }
 
@@ -115,6 +116,43 @@ export function openmrsFetch(
   });
 }
 
+export function openmrsObservableFetch(
+  url: string,
+  fetchInit: FetchConfig = {}
+) {
+  if (typeof fetchInit !== "object") {
+    throw Error(
+      "The second argument to openmrsObservableFetch must be either omitted or an object"
+    );
+  }
+
+  const abortController = new AbortController();
+
+  fetchInit.signal = abortController.signal;
+
+  return new Observable<FetchResponse>(observer => {
+    let hasResponse = false;
+
+    openmrsFetch(url, fetchInit).then(
+      response => {
+        hasResponse = true;
+        observer.next(response);
+        observer.complete();
+      },
+      err => {
+        hasResponse = true;
+        observer.error(err);
+      }
+    );
+
+    return () => {
+      if (!hasResponse) {
+        abortController.abort();
+      }
+    };
+  });
+}
+
 export class OpenmrsFetchError extends Error {
   constructor(
     url: string,
@@ -133,7 +171,7 @@ export class OpenmrsFetchError extends Error {
   responseBody: string | FetchResponseJson | null;
 }
 
-interface FetchResponse extends Response {
+export interface FetchResponse extends Response {
   data: any | null;
 }
 

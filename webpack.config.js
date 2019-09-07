@@ -23,6 +23,7 @@ module.exports = {
     extensions: [".ts", ".js"]
   },
   plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
+  externals: [],
   devServer: {
     disableHostCheck: true,
     headers: {
