@@ -9,8 +9,8 @@ const userSubject = new BehaviorSubject(
 export function getCurrentUser(opts: CurrentUserOptions = {}) {
   return userSubject.asObservable().pipe(
     mergeAll(),
-    map((r: FetchResponse) => r.data),
-    filter(user => opts.includeUnauthenticated || user.authenticated)
+    map((r: FetchResponse) => (opts.includeAuthStatus ? r.data : r.data.user)),
+    filter(Boolean)
   );
 }
 
@@ -19,5 +19,5 @@ export function refetchCurrentUser() {
 }
 
 type CurrentUserOptions = {
-  includeUnauthenticated?: boolean;
+  includeAuthStatus?: boolean;
 };
