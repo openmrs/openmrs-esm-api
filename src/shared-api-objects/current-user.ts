@@ -19,7 +19,6 @@ export function refetchCurrentUser() {
 }
 
 export function userHasAccess(requiredPrivilege, user) {
-  console.log("checking for access", user);
   return user.privileges.find(p => requiredPrivilege === p.display);
 }
 
