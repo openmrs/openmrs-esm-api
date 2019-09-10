@@ -18,6 +18,11 @@ export function refetchCurrentUser() {
   userSubject.next(openmrsObservableFetch("/ws/rest/v1/session"));
 }
 
+export function userHasAccess(requiredPrivilege, user) {
+  console.log("checking for access", user);
+  return user.privileges.find(p => requiredPrivilege === p.display);
+}
+
 type CurrentUserOptions = {
   includeAuthStatus?: boolean;
 };
