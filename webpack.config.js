@@ -21,18 +21,6 @@ module.exports = {
         test: /\.m?(js|ts|tsx)$/,
         exclude: /(node_modules|bower_components)/,
         use: "babel-loader"
-      },
-      {
-        test: /\.css$/,
-        use: [
-          { loader: "style-loader" },
-          {
-            loader: "css-loader",
-            options: {
-              modules: true
-            }
-          }
-        ]
       }
     ]
   },
