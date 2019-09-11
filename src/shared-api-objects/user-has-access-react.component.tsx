@@ -8,7 +8,6 @@ export default function UserHasAccessReact(props) {
     const subscription = getCurrentUser({ includeAuthStatus: false }).subscribe(
       x => {
         setUser(x);
-        console.log(x);
       }
     );
     return () => {
