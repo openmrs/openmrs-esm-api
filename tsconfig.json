@@ -3,6 +3,7 @@
     "esModuleInterop": true,
     "module": "esnext",
     "allowSyntheticDefaultImports": true,
+    "jsx": "react",
     "strictNullChecks": true,
     "moduleResolution": "node",
     "lib": [

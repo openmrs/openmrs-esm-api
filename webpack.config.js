@@ -13,17 +13,22 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.(j|t)s$/,
-        exclude: /node_modules/,
+        parser: {
+          system: false
+        }
+      },
+      {
+        test: /\.m?(js|ts|tsx)$/,
+        exclude: /(node_modules|bower_components)/,
         use: "babel-loader"
       }
     ]
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js", ".tsx", ".jsx"]
   },
   plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
-  externals: [],
+  externals: ["react", "react-dom", /^@openmrs\/esm/],
   devServer: {
     disableHostCheck: true,
     headers: {

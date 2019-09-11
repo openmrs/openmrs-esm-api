@@ -5,3 +5,7 @@ export {
   refetchCurrentUser,
   userHasAccess
 } from "./shared-api-objects/current-user";
+
+export {
+  default as UserHasAccessReact
+} from "./shared-api-objects/user-has-access-react.component";
