@@ -1,3 +1,4 @@
+import "./set-public-path";
 export { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 export { fhir } from "./fhir";
 export {
