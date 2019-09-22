@@ -1,17 +1,23 @@
-import { BehaviorSubject } from "rxjs";
+import { BehaviorSubject, Observable } from "rxjs";
 import { openmrsObservableFetch, FetchResponse } from "../openmrs-fetch";
 import { mergeAll, filter, map } from "rxjs/operators";
 
-const userSubject = new BehaviorSubject(
-  openmrsObservableFetch("/ws/rest/v1/session")
+const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
+  openmrsObservableFetch("/ws/rest/v1/session") as Observable<
+    LoggedInUserFetchResponse
+  >
 );
 
-export function getCurrentUser(opts: CurrentUserOptions = {}) {
+export function getCurrentUser(
+  opts: CurrentUserOptions = {}
+): Observable<LoggedInUser | UnauthenticatedUser> {
   return userSubject.asObservable().pipe(
     mergeAll(),
-    map((r: FetchResponse) => (opts.includeAuthStatus ? r.data : r.data.user)),
+    map((r: LoggedInUserFetchResponse) =>
+      opts.includeAuthStatus ? r.data : r.data.user
+    ),
     filter(Boolean)
-  );
+  ) as Observable<LoggedInUser | UnauthenticatedUser>;
 }
 
 export function refetchCurrentUser() {
@@ -25,3 +31,47 @@ export function userHasAccess(requiredPrivilege, user) {
 type CurrentUserOptions = {
   includeAuthStatus?: boolean;
 };
+
+interface LoggedInUser {
+  uuid: string;
+  display: string;
+  username: string;
+  systemId: string;
+  userProperties: any;
+  person: Person;
+  privileges: Privilege[];
+  roles: Role[];
+  retired: boolean;
+  locale: string;
+  allowedLocales: string[];
+  [anythingElse: string]: any;
+}
+
+type UnauthenticatedUser = {
+  sessionId: string;
+  authenticated: boolean;
+};
+
+type Person = {
+  uuid: string;
+  display: string;
+  links: any[];
+};
+
+type Privilege = {
+  uuid: string;
+  display: string;
+  links: any[];
+};
+
+type Role = {
+  uuid: string;
+  display: string;
+  links: any[];
+};
+
+interface LoggedInUserFetchResponse extends FetchResponse {
+  data: UnauthenticatedUser & {
+    user?: LoggedInUser;
+  };
+}
