@@ -3,13 +3,12 @@
   "version": "1.0.0",
   "description": "The javascript module for interacting with the OpenMRS API",
   "main": "dist/openmrs-esm-api.js",
-  "types": "dist/openmrs-esm-api.d.ts",
+  "types": "src/openmrs-esm-api.ts",
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server",
     "build": "webpack --mode=production",
     "typescript": "tsc",
-    "prepublishOnly": "tsc src/openmrs-esm-api.ts --jsx react --outFile dist/openmrs-esm-api.js --module system -d --moduleResolution node",
     "prettier": "prettier src/**/* --write",
     "lint": "eslint src --ext ts"
   },
