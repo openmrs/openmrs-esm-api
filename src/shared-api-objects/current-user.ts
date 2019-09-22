@@ -50,6 +50,7 @@ interface LoggedInUser {
 type UnauthenticatedUser = {
   sessionId: string;
   authenticated: boolean;
+  user?: LoggedInUser;
 };
 
 type Person = {
