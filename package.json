@@ -1,6 +1,6 @@
 {
   "name": "@openmrs/esm-api",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "The javascript module for interacting with the OpenMRS API",
   "main": "dist/openmrs-esm-api.js",
   "types": "src/openmrs-esm-api.ts",
