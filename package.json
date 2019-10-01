@@ -1,6 +1,6 @@
 {
   "name": "@openmrs/esm-api",
-  "version": "1.0.3",
+  "version": "1.0.4-alpha.0",
   "description": "The javascript module for interacting with the OpenMRS API",
   "main": "dist/openmrs-esm-api.js",
   "types": "src/openmrs-esm-api.ts",
@@ -12,6 +12,9 @@
     "prettier": "prettier src/**/* --write",
     "prepublishOnly": "npm run build",
     "lint": "eslint src --ext ts"
+  },
+  "directories": {
+    "lib": "dist"
   },
   "husky": {
     "hooks": {
@@ -48,10 +51,12 @@
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-ts-important-stuff": "^1.0.0",
     "eslint-plugin-prettier": "^3.1.0",
+    "fhir.js": "0.0.20",
     "fork-ts-checker-webpack-plugin": "^1.5.0",
     "husky": "^3.0.3",
     "jest": "^24.8.0",
     "jest-cli": "^24.8.0",
+    "lodash-es": "^4.17.15",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
     "systemjs-webpack-interop": "^1.1.0",
@@ -61,8 +66,6 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
-    "fhir.js": "0.0.20",
-    "lodash-es": "^4.17.15",
     "react": "^16.9.0",
     "rxjs": "^6.5.3"
   }
