@@ -13,6 +13,9 @@
     "prepublishOnly": "npm run build",
     "lint": "eslint src --ext ts"
   },
+  "directories": {
+    "lib": "dist"
+  },
   "husky": {
     "hooks": {
       "pre-commit": "pretty-quick --staged && npm run lint && npm test && npm run typescript"
