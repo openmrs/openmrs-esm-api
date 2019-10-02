@@ -6,7 +6,7 @@ export default function UserHasAccessReact(props) {
 
   React.useEffect(() => {
     const subscription = getCurrentUser({ includeAuthStatus: false }).subscribe(
-      x => {
+      (x: any) => {
         setUser(x);
       }
     );
