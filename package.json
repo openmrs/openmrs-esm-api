@@ -66,6 +66,7 @@
     "webpack-dev-server": "^3.8.0"
   },
   "dependencies": {
+    "@types/fhir": "0.0.30",
     "react": "^16.9.0",
     "rxjs": "^6.5.3"
   }
