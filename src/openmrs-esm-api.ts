@@ -7,7 +7,10 @@ export {
   userHasAccess
 } from "./shared-api-objects/current-user";
 
-export { getCurrentPatient } from "./shared-api-objects/current-patient";
+export {
+  getCurrentPatient,
+  refetchCurrentPatient
+} from "./shared-api-objects/current-patient";
 
 export {
   default as UserHasAccessReact
