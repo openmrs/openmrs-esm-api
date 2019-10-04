@@ -8,7 +8,7 @@ const currentPatientSubject = new ReplaySubject(1);
 
 window.addEventListener("single-spa:routing-event", () => {
   const u = getPatientUuidFromUrl();
-  if (currentPatientUuid !== u) {
+  if (u && currentPatientUuid !== u) {
     currentPatientUuid = u;
     currentPatientSubject.next(
       fhir.read({ type: "Patient", patient: currentPatientUuid })
