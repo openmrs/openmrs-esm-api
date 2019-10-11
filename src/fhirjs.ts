@@ -1,3 +1,9 @@
+/*
+Originally taken from https://github.com/FHIR/fhir.js/blob/ec82ccfc125e05dbb645f47c100fe60f2c34bb73/src/fhir.d.ts
+Has been adapted to be even better - if we can get fhir.js to publish a good version to npm with better typedefs,
+we can remove this file in favor of the one they maintain
+*/
+
 type ClientFn = (...args: any[]) => Promise<{ data: any }>;
 type ResourceName =
   | "DomainResource"

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server",
-    "build": "rimraf dist && concurrently 'webpack --mode=production' 'npm run typescript'",
+    "build": "rimraf dist && concurrently -n webpack,typescript 'webpack --mode=production' 'npm run typescript'",
     "build-webpack": "webpack --mode=production",
     "typescript": "tsc",
     "prettier": "prettier src/**/* --write",
@@ -18,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "concurrently 'pretty-quick --staged' 'npm run lint' 'npm test' 'npm run typescript'"
+      "pre-commit": "concurrently -n prettier,lint,test,typescript 'pretty-quick --staged' 'npm run lint' 'npm test' 'npm run typescript'"
     }
   },
   "browserslist": [
