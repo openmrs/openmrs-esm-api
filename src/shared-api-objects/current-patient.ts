@@ -17,7 +17,7 @@ window.addEventListener("single-spa:routing-event", () => {
 });
 
 function getPatientUuidFromUrl() {
-  const match = /\/patient\/(.+)\/?/.exec(location.pathname);
+  const match = /\/patient\/([a-zA-Z0-9\-]+)\/?/.exec(location.pathname);
   return match && match[1];
 }
 
