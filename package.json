@@ -3,7 +3,6 @@
   "version": "1.0.5",
   "description": "The javascript module for interacting with the OpenMRS API",
   "main": "dist/openmrs-esm-api.js",
-  "types": "src/openmrs-esm-api.ts",
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server",
