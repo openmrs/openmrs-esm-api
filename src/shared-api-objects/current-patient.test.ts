@@ -54,4 +54,29 @@ describe("current patient", () => {
         });
       });
   });
+
+  it("can handle dashes and alphanumeric characters in the patient uuid", () => {
+    fhir.read.mockReturnValueOnce(
+      Promise.resolve({
+        data: {}
+      })
+    );
+
+    window.history.pushState(
+      {},
+      document.title,
+      `/patient/34-asdsd-234243h342`
+    );
+    window.dispatchEvent(new CustomEvent("single-spa:routing-event"));
+
+    return getCurrentPatient()
+      .pipe(first())
+      .toPromise()
+      .then(() => {
+        expect(fhir.read).toHaveBeenCalledWith({
+          type: "Patient",
+          patient: "34-asdsd-234243h342"
+        });
+      });
+  });
 });
