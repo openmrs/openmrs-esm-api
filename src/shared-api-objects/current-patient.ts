@@ -37,12 +37,6 @@ export function refetchCurrentPatient() {
   );
 }
 
-// exported only for testing purposes. Should not be exported outside of openmrs-esm-api to other modules
-// The browser's url and routes are the only thing that should determine the current uuid.
-// export function setCurrentPatientUuid(uuid) {
-//   currentPatientUuid = uuid
-// }
-
 type PatientFhirOptions = {
   includeConfig: boolean;
 };
