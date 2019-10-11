@@ -1,10 +1,10 @@
 import isPlainObject from "lodash-es/isPlainObject";
 import { Observable } from "rxjs";
 
-export function openmrsFetch(
+export function openmrsFetch<T = any>(
   url: string,
   fetchInit: FetchConfig = {}
-): Promise<FetchResponse> {
+): Promise<FetchResponse<T>> {
   if (typeof url !== "string") {
     throw Error(
       "The first argument to @openmrs/api's openmrsFetch function must be a url string"
@@ -62,14 +62,14 @@ export function openmrsFetch(
   const requestStacktrace = Error();
 
   return window.fetch(url, fetchInit as RequestInit).then(r => {
-    const response = r as FetchResponse;
+    const response = r as FetchResponse<T>;
     if (response.ok) {
       if (response.status === 204) {
         /* HTTP 204 - No Content
          * We should not try to download the empty response as json. Instead,
          * we return null since there is no response body.
          */
-        response.data = null;
+        response.data = (null as unknown) as T;
         return response;
       } else {
         // HTTP 200s - The request succeeded
@@ -116,7 +116,7 @@ export function openmrsFetch(
   });
 }
 
-export function openmrsObservableFetch(
+export function openmrsObservableFetch<T>(
   url: string,
   fetchInit: FetchConfig = {}
 ) {
@@ -130,7 +130,7 @@ export function openmrsObservableFetch(
 
   fetchInit.signal = abortController.signal;
 
-  return new Observable<FetchResponse>(observer => {
+  return new Observable<FetchResponse<T>>(observer => {
     let hasResponse = false;
 
     openmrsFetch(url, fetchInit).then(
@@ -171,8 +171,8 @@ export class OpenmrsFetchError extends Error {
   responseBody: string | FetchResponseJson | null;
 }
 
-export interface FetchResponse extends Response {
-  data: any | null;
+export interface FetchResponse<T = any> extends Response {
+  data: T;
 }
 
 interface FetchConfig extends Omit<Omit<RequestInit, "body">, "headers"> {

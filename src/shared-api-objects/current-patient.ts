@@ -1,17 +1,19 @@
 import { ReplaySubject, Observable } from "rxjs";
-import { FetchResponse } from "../openmrs-fetch";
 import { fhir } from "../fhir";
 import { mergeAll, filter, map } from "rxjs/operators";
+import { FetchResponse } from "../openmrs-fetch";
 
 let currentPatientUuid;
-const currentPatientSubject = new ReplaySubject(1);
+const currentPatientSubject = new ReplaySubject<
+  Promise<{ data: fhir.Patient }>
+>(1);
 
 window.addEventListener("single-spa:routing-event", () => {
   const u = getPatientUuidFromUrl();
   if (u && currentPatientUuid !== u) {
     currentPatientUuid = u;
     currentPatientSubject.next(
-      fhir.read({ type: "Patient", patient: currentPatientUuid })
+      fhir.read<fhir.Patient>({ type: "Patient", patient: currentPatientUuid })
     );
   }
 });
@@ -21,40 +23,38 @@ function getPatientUuidFromUrl() {
   return match && match[1];
 }
 
-export function getCurrentPatient(
-  opts: PatientFhirOptions = { includeConfig: false }
-): Observable<Patient> {
-  return currentPatientSubject.asObservable().pipe(
+function getCurrentPatient(): Observable<fhir.Patient>;
+function getCurrentPatient(
+  opts: PatientWithFullResponse
+): Observable<FetchResponse<fhir.Patient>>;
+function getCurrentPatient(opts: OnlyThePatient): Observable<fhir.Patient>;
+function getCurrentPatient(
+  opts: CurrentPatientOptions = { includeConfig: false }
+): Observable<CurrentPatient> {
+  const result = currentPatientSubject.asObservable().pipe(
     mergeAll(),
-    map((r: CurrentPatientFhirResponse) => (opts.includeConfig ? r : r.data)),
+    map(r => (opts.includeConfig ? r : r.data)),
     filter(Boolean)
-  ) as Observable<Patient>;
+  );
+  return result as Observable<CurrentPatient>;
 }
+
+export { getCurrentPatient };
 
 export function refetchCurrentPatient() {
   currentPatientSubject.next(
-    fhir.read({ type: "Patient", patient: currentPatientUuid })
+    fhir.read<fhir.Patient>({ type: "Patient", patient: currentPatientUuid })
   );
 }
 
-type PatientFhirOptions = {
-  includeConfig: boolean;
-};
+type CurrentPatient = fhir.Patient | FetchResponse<fhir.Patient>;
 
-interface Patient {
-  uuid: string;
-  display: string;
-  active: boolean;
-  address: [any];
-  birthDate: string;
-  deceasedBoolean: boolean;
-  gender: string;
-  identifier: [any];
-  name: [any];
-  [anythingElse: string]: any;
+interface CurrentPatientOptions {
+  includeConfig?: boolean;
 }
-
-interface CurrentPatientFhirResponse extends FetchResponse {
-  config: {};
-  data: {};
+interface PatientWithFullResponse extends CurrentPatientOptions {
+  includeConfig: true;
+}
+interface OnlyThePatient extends CurrentPatientOptions {
+  includeConfig: false;
 }

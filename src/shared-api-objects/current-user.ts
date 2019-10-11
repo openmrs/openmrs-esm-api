@@ -8,8 +8,15 @@ const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
   >
 );
 
-export function getCurrentUser(
-  opts: CurrentUserOptions = {}
+function getCurrentUser(): Observable<LoggedInUser>;
+function getCurrentUser(
+  opts: CurrentUserWithResponseOption
+): Observable<UnauthenticatedUser>;
+function getCurrentUser(
+  opts: CurrentUserWithoutResponseOption
+): Observable<LoggedInUser>;
+function getCurrentUser(
+  opts: CurrentUserOptions = { includeAuthStatus: false }
 ): Observable<LoggedInUser | UnauthenticatedUser> {
   return userSubject.asObservable().pipe(
     mergeAll(),
@@ -20,6 +27,8 @@ export function getCurrentUser(
   ) as Observable<LoggedInUser | UnauthenticatedUser>;
 }
 
+export { getCurrentUser };
+
 export function refetchCurrentUser() {
   userSubject.next(openmrsObservableFetch("/ws/rest/v1/session"));
 }
@@ -28,9 +37,17 @@ export function userHasAccess(requiredPrivilege, user) {
   return user.privileges.find(p => requiredPrivilege === p.display);
 }
 
-type CurrentUserOptions = {
+interface CurrentUserOptions {
   includeAuthStatus?: boolean;
-};
+}
+
+interface CurrentUserWithResponseOption extends CurrentUserOptions {
+  includeAuthStatus: true;
+}
+
+interface CurrentUserWithoutResponseOption extends CurrentUserOptions {
+  includeAuthStatus: false;
+}
 
 interface LoggedInUser {
   uuid: string;
