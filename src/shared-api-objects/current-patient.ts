@@ -17,7 +17,7 @@ window.addEventListener("single-spa:routing-event", () => {
 });
 
 function getPatientUuidFromUrl() {
-  const match = /\/patient\/(.+)\/?/.exec(location.pathname);
+  const match = /\/patient\/([a-zA-Z0-9]+)\/?/.exec(window.location.pathname);
   return match && match[1];
 }
 
@@ -36,6 +36,12 @@ export function refetchCurrentPatient() {
     fhir.read({ type: "Patient", patient: currentPatientUuid })
   );
 }
+
+// exported only for testing purposes. Should not be exported outside of openmrs-esm-api to other modules
+// The browser's url and routes are the only thing that should determine the current uuid.
+// export function setCurrentPatientUuid(uuid) {
+//   currentPatientUuid = uuid
+// }
 
 type PatientFhirOptions = {
   includeConfig: boolean;
