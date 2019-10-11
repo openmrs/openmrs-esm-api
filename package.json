@@ -6,7 +6,8 @@
   "scripts": {
     "test": "jest",
     "start": "webpack-dev-server",
-    "build": "webpack --mode=production",
+    "build": "rimraf dist && concurrently 'webpack --mode=production' 'npm run typescript'",
+    "build-webpack": "webpack --mode=production",
     "typescript": "tsc",
     "prettier": "prettier src/**/* --write",
     "prepublishOnly": "npm run build",
@@ -17,7 +18,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "pretty-quick --staged && npm run lint && npm test && npm run typescript"
+      "pre-commit": "concurrently 'pretty-quick --staged' 'npm run lint' 'npm test' 'npm run typescript'"
     }
   },
   "browserslist": [
@@ -46,6 +47,7 @@
     "babel-loader": "^8.0.6",
     "browserslist-config-openmrs": "^1.0.0",
     "clean-webpack-plugin": "^3.0.0",
+    "concurrently": "^5.0.0",
     "eslint": "^6.1.0",
     "eslint-config-prettier": "^6.0.0",
     "eslint-config-ts-important-stuff": "^1.0.0",
@@ -58,6 +60,7 @@
     "lodash-es": "^4.17.15",
     "prettier": "^1.18.2",
     "pretty-quick": "^1.11.1",
+    "rimraf": "^3.0.0",
     "systemjs-webpack-interop": "^1.1.0",
     "typescript": "^3.5.3",
     "webpack": "^4.39.1",

@@ -10,11 +10,11 @@ jest.mock("../fhir", () => ({
 
 describe("current patient", () => {
   beforeEach(() => {
-    fhir.read.mockReset();
+    (fhir.read as jest.MockedFunction<any>).mockReset();
   });
 
   it("fetches the correct patient from a patient chart URL", () => {
-    fhir.read.mockReturnValueOnce(
+    (fhir.read as jest.MockedFunction<any>).mockReturnValueOnce(
       Promise.resolve({
         data: {}
       })
@@ -27,7 +27,7 @@ describe("current patient", () => {
       .pipe(first())
       .toPromise()
       .then(() => {
-        expect(fhir.read).toHaveBeenCalledWith({
+        expect(fhir.read as jest.MockedFunction<any>).toHaveBeenCalledWith({
           type: "Patient",
           patient: "12"
         });
@@ -35,7 +35,7 @@ describe("current patient", () => {
   });
 
   it("fetches the correct patient from the patient home URL", () => {
-    fhir.read.mockReturnValueOnce(
+    (fhir.read as jest.MockedFunction<any>).mockReturnValueOnce(
       Promise.resolve({
         data: {}
       })
@@ -48,7 +48,7 @@ describe("current patient", () => {
       .pipe(first())
       .toPromise()
       .then(() => {
-        expect(fhir.read).toHaveBeenCalledWith({
+        expect(fhir.read as jest.MockedFunction<any>).toHaveBeenCalledWith({
           type: "Patient",
           patient: "34"
         });
@@ -56,7 +56,7 @@ describe("current patient", () => {
   });
 
   it("can handle dashes and alphanumeric characters in the patient uuid", () => {
-    fhir.read.mockReturnValueOnce(
+    (fhir.read as jest.MockedFunction<any>).mockReturnValueOnce(
       Promise.resolve({
         data: {}
       })
@@ -73,7 +73,7 @@ describe("current patient", () => {
       .pipe(first())
       .toPromise()
       .then(() => {
-        expect(fhir.read).toHaveBeenCalledWith({
+        expect(fhir.read as jest.MockedFunction<any>).toHaveBeenCalledWith({
           type: "Patient",
           patient: "34-asdsd-234243h342"
         });
