@@ -169,3 +169,7 @@ export interface FhirClient {
   resolve: ClientFn;
   patch: typeof Patch;
 }
+
+declare function makeFhir(a: any, b: any): FhirClient;
+
+export default makeFhir;
