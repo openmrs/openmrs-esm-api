@@ -17,11 +17,7 @@
       "es2015.promise",
       "es2016.array.include",
       "es2018"
-    ],
-    "baseUrl": ".",
-    "paths": {
-      "fhir.js/src/fhir": ["src/fhirjs.d.ts"]
-    }
+    ]
   },
   "include": ["src/**/*"]
 }
