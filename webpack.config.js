@@ -7,7 +7,8 @@ module.exports = {
   output: {
     filename: "openmrs-esm-api.js",
     path: path.resolve(__dirname, "dist"),
-    libraryTarget: "system"
+    libraryTarget: "system",
+    jsonpFunction: "webpackJsonp_openmrs_esm_api"
   },
   devtool: "sourcemap",
   module: {
