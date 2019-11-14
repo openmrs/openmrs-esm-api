@@ -33,8 +33,11 @@ export function refetchCurrentUser() {
   userSubject.next(openmrsObservableFetch("/ws/rest/v1/session"));
 }
 
-export function userHasAccess(requiredPrivilege, user) {
-  return user.privileges.find(p => requiredPrivilege === p.display);
+export function userHasAccess(requiredPrivilegeOrRole, user) {
+  return (
+    user.privileges.find(p => requiredPrivilegeOrRole === p.display) ||
+    user.roles.find(r => requiredPrivilegeOrRole === r.display)
+  );
 }
 
 interface CurrentUserOptions {
