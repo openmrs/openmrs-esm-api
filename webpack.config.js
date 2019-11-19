@@ -31,7 +31,7 @@ module.exports = {
     }
   },
   plugins: [new CleanWebpackPlugin(), new ForkTsCheckerWebpackPlugin()],
-  externals: ["react", "react-dom", /^@openmrs\/esm/],
+  externals: ["react", "react-dom", /^@openmrs\/esm/, "single-spa"],
   devServer: {
     disableHostCheck: true,
     headers: {

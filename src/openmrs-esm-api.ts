@@ -7,7 +7,8 @@ defineConfigSchema("@openmrs/esm-api", {
       default: true
     },
     url: {
-      default: window.getOpenmrsSpaBase() + 'login'
+      //@ts-ignore
+      default: window.getOpenmrsSpaBase() + "login"
     },
     errors: {
       default: [401, 403]

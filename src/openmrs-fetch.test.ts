@@ -1,14 +1,8 @@
 import { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 import { isObservable } from "rxjs";
 
+import { navigateToUrl as mockNavigateToUrl } from "single-spa";
 import { getConfig as mockGetConfig } from "@openmrs/esm-module-config";
-
-jest.mock("@openmrs/esm-module-config", () => ({
-  defineConfigSchema: jest.fn(),
-  getConfig: jest
-    .fn()
-    .mockReturnValue({ redirectAuthFailure: { enabled: false } })
-}));
 
 describe("openmrsFetch", () => {
   beforeEach(() => {
@@ -186,9 +180,7 @@ describe("openmrsFetch", () => {
   });
 
   it(`redirects to login page when the server responds with a 401`, () => {
-    // @ts-ignore
-    window.location.assign = jest.fn();
-    mockGetConfig.mockReturnValueOnce({
+    mockGetConfig.mockResolvedValueOnce({
       redirectAuthFailure: { enabled: true, url: "test/url", errors: [401] }
     });
 
@@ -208,7 +200,7 @@ describe("openmrsFetch", () => {
       })
       .catch(err => {
         // @ts-ignore
-        expect(window.location.assign.mock.calls[0][0]).toBe("test/url");
+        expect(mockNavigateToUrl.mock.calls[0][0]).toBe("test/url");
       });
   });
 });

@@ -66,9 +66,10 @@
     "webpack-dev-server": "^3.9.0"
   },
   "dependencies": {
-    "@openmrs/esm-module-config": "^1.0.0",
     "@types/fhir": "0.0.31",
     "fast-glob": "^3.1.0",
-    "react": "^16.11.0"
+    "react": "^16.11.0",
+    "@openmrs/esm-module-config": "^1.1.0",
+    "single-spa": "^4.4.1"
   }
 }

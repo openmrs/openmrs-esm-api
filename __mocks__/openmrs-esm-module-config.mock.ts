@@ -1,7 +1,5 @@
-import React from "react";
+export const defineConfigSchema = jest.fn();
 
-export function defineConfigSchema() {}
-
-export function getConfig() {
-  return { redirectAuthFailure: { enabled: false } };
-}
+export const getConfig = jest
+  .fn()
+  .mockResolvedValue({ redirectAuthFailure: { enabled: false } });
