@@ -185,7 +185,7 @@ describe("openmrsFetch", () => {
       });
   });
 
-  it(`redirects to login page when the server responds with a 401`, done => {
+  it(`redirects to login page when the server responds with a 401`, () => {
     // @ts-ignore
     window.location.assign = jest.fn();
     mockGetConfig.mockReturnValueOnce({
