@@ -209,7 +209,6 @@ describe("openmrsFetch", () => {
       .catch(err => {
         // @ts-ignore
         expect(window.location.assign.mock.calls[0][0]).toBe("test/url");
-        done();
       });
   });
 });
