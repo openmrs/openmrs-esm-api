@@ -1,5 +1,6 @@
 import isPlainObject from "lodash-es/isPlainObject";
 import { Observable } from "rxjs";
+import { getConfig } from "@openmrs/esm-module-config";
 
 export function openmrsFetch<T = any>(
   url: string,
@@ -84,6 +85,17 @@ export function openmrsFetch<T = any>(
        * Our goal is to come up with best possible stacktrace and error message
        * to help developers understand the problem and debug
        */
+
+      /*
+       *Redirect to given url when redirect on auth failure is enabled
+       */
+      const { redirectAuthFailure } = getConfig("@openmrs/esm-api");
+      if (
+        redirectAuthFailure.enabled &&
+        redirectAuthFailure.errors.indexOf(response.status) >= 0
+      ) {
+        window.location.assign(redirectAuthFailure.url);
+      }
 
       // Attempt to download a response body, if it has one
       return response.text().then(

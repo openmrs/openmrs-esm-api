@@ -1,4 +1,20 @@
+import { defineConfigSchema } from "@openmrs/esm-module-config";
 import "./set-public-path";
+
+defineConfigSchema("@openmrs/esm-api", {
+  redirectAuthFailure: {
+    enabled: {
+      default: true
+    },
+    url: {
+      default: "/openmrs/login.htm"
+    },
+    errors: {
+      default: [401, 403]
+    }
+  }
+});
+
 export { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 export { fhir } from "./fhir";
 export {

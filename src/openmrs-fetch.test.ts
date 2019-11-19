@@ -1,6 +1,15 @@
 import { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 import { isObservable } from "rxjs";
 
+import { getConfig as mockGetConfig } from "@openmrs/esm-module-config";
+
+jest.mock("@openmrs/esm-module-config", () => ({
+  defineConfigSchema: jest.fn(),
+  getConfig: jest
+    .fn()
+    .mockReturnValue({ redirectAuthFailure: { enabled: false } })
+}));
+
 describe("openmrsFetch", () => {
   beforeEach(() => {
     // @ts-ignore
@@ -173,6 +182,34 @@ describe("openmrsFetch", () => {
         expect(err.message).toMatch(/\/ws\/rest\/v1\/session/);
         expect(err.responseBody).toEqual("a string response body");
         expect(err.response.status).toBe(400);
+      });
+  });
+
+  it(`redirects to login page when the server responds with a 401`, done => {
+    // @ts-ignore
+    window.location.assign = jest.fn();
+    mockGetConfig.mockReturnValueOnce({
+      redirectAuthFailure: { enabled: true, url: "test/url", errors: [401] }
+    });
+
+    // @ts-ignore
+    window.fetch.mockReturnValue(
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        statusText: "You are not authorized",
+        text: () => Promise.resolve("a string response body")
+      })
+    );
+
+    return openmrsFetch("/ws/rest/v1/session")
+      .then(data => {
+        fail("Promise shouldn't resolve when server responds with 401");
+      })
+      .catch(err => {
+        // @ts-ignore
+        expect(window.location.assign.mock.calls[0][0]).toBe("test/url");
+        done();
       });
   });
 });

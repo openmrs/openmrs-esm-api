@@ -1,5 +1,7 @@
 module.exports = {
   moduleNameMapper: {
-    "lodash-es": "lodash"
+    "lodash-es": "lodash",
+    "@openmrs/esm-module-config":
+      "<rootDir>/__mocks__/openmrs-esm-module-config.mock.ts"
   }
 };
