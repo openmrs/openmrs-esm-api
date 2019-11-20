@@ -8,12 +8,17 @@ describe("openmrsFetch", () => {
   beforeEach(() => {
     // @ts-ignore
     window.openmrsBase = "/openmrs";
+    // @ts-ignore
+    window.getOpenmrsSpaBase = () => "/openmrs/spa/";
     window.fetch = jest.fn();
+    window.location.assign = jest.fn();
   });
 
   afterEach(() => {
     // @ts-ignore
     delete window.openmrsBase;
+    // @ts-ignore
+    delete window.getOpenmrsSpaBase;
   });
 
   it(`throws an error if you don't pass in a url string`, () => {
@@ -179,9 +184,13 @@ describe("openmrsFetch", () => {
       });
   });
 
-  it(`redirects to login page when the server responds with a 401`, () => {
+  it(`navigates to spa login page when the server responds with a 401`, () => {
     mockGetConfig.mockResolvedValueOnce({
-      redirectAuthFailure: { enabled: true, url: "test/url", errors: [401] }
+      redirectAuthFailure: {
+        enabled: true,
+        url: "/openmrs/spa/login",
+        errors: [401]
+      }
     });
 
     // @ts-ignore
@@ -194,14 +203,35 @@ describe("openmrsFetch", () => {
       })
     );
 
-    return openmrsFetch("/ws/rest/v1/session")
-      .then(data => {
-        fail("Promise shouldn't resolve when server responds with 401");
+    return openmrsFetch("/ws/rest/v1/session").then(data => {
+      //@ts-ignore
+      expect(mockNavigateToUrl.mock.calls[0][0]).toBe("/openmrs/spa/login");
+    });
+  });
+
+  it(`redirects to openmrs login page when the server responds with a 401`, () => {
+    mockGetConfig.mockResolvedValueOnce({
+      redirectAuthFailure: {
+        enabled: true,
+        url: "/openmrs/login",
+        errors: [401]
+      }
+    });
+
+    // @ts-ignore
+    window.fetch.mockReturnValue(
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        statusText: "You are not authorized",
+        text: () => Promise.resolve("a string response body")
       })
-      .catch(err => {
-        // @ts-ignore
-        expect(mockNavigateToUrl.mock.calls[0][0]).toBe("test/url");
-      });
+    );
+
+    return openmrsFetch("/ws/rest/v1/session").then(data => {
+      //@ts-ignore
+      expect(window.location.assign.mock.calls[0][0]).toBe("/openmrs/login");
+    });
   });
 });
 

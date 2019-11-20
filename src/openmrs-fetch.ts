@@ -95,8 +95,16 @@ export function openmrsFetch<T = any>(
         redirectAuthFailure.enabled &&
         redirectAuthFailure.errors.indexOf(response.status) >= 0
       ) {
-        navigateToUrl(redirectAuthFailure.url);
-        throw new OpenmrsFetchError(url, response, null, requestStacktrace);
+        const navigatesWithInSpa = url => {
+          // @ts-ignore
+          return url.startsWith(window.getOpenmrsSpaBase());
+        };
+
+        navigatesWithInSpa(redirectAuthFailure.url)
+          ? navigateToUrl(redirectAuthFailure.url)
+          : location.assign(redirectAuthFailure.url);
+
+        return new Promise<FetchResponse>(resolve => resolve());
       } else {
         // Attempt to download a response body, if it has one
         return response.text().then(
