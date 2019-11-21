@@ -4,17 +4,26 @@ import { mergeAll, filter, map } from "rxjs/operators";
 import { FetchResponse } from "../openmrs-fetch";
 
 let currentPatientUuid;
+const currentPatientUuidSubject = new ReplaySubject<PatientUuid>(1);
 const currentPatientSubject = new ReplaySubject<
   Promise<{ data: fhir.Patient }>
 >(1);
 
 window.addEventListener("single-spa:routing-event", () => {
   const u = getPatientUuidFromUrl();
-  if (u && currentPatientUuid !== u) {
+
+  if (u !== currentPatientUuid) {
     currentPatientUuid = u;
-    currentPatientSubject.next(
-      fhir.read<fhir.Patient>({ type: "Patient", patient: currentPatientUuid })
-    );
+    currentPatientUuidSubject.next(u);
+
+    if (u) {
+      currentPatientSubject.next(
+        fhir.read<fhir.Patient>({
+          type: "Patient",
+          patient: currentPatientUuid
+        })
+      );
+    }
   }
 });
 
@@ -47,7 +56,11 @@ export function refetchCurrentPatient() {
   );
 }
 
-type CurrentPatient = fhir.Patient | FetchResponse<fhir.Patient>;
+export function getCurrentPatientUuid() {
+  return currentPatientUuidSubject.asObservable();
+}
+
+export type CurrentPatient = fhir.Patient | FetchResponse<fhir.Patient>;
 
 interface CurrentPatientOptions {
   includeConfig?: boolean;
@@ -58,3 +71,5 @@ interface PatientWithFullResponse extends CurrentPatientOptions {
 interface OnlyThePatient extends CurrentPatientOptions {
   includeConfig: false;
 }
+
+export type PatientUuid = string | null;
