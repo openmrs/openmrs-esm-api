@@ -27,8 +27,12 @@ export {
 
 export {
   getCurrentPatient,
-  refetchCurrentPatient
+  refetchCurrentPatient,
+  getCurrentPatientUuid
 } from "./shared-api-objects/current-patient";
+export {
+  useCurrentPatient
+} from "./shared-api-objects/use-current-patient.hook";
 
 export {
   default as UserHasAccessReact
