@@ -1,16 +1,24 @@
 import { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 import { isObservable } from "rxjs";
 
+import { navigateToUrl as mockNavigateToUrl } from "single-spa";
+import { getConfig as mockGetConfig } from "@openmrs/esm-module-config";
+
 describe("openmrsFetch", () => {
   beforeEach(() => {
     // @ts-ignore
     window.openmrsBase = "/openmrs";
+    // @ts-ignore
+    window.getOpenmrsSpaBase = () => "/openmrs/spa/";
     window.fetch = jest.fn();
+    window.location.assign = jest.fn();
   });
 
   afterEach(() => {
     // @ts-ignore
     delete window.openmrsBase;
+    // @ts-ignore
+    delete window.getOpenmrsSpaBase;
   });
 
   it(`throws an error if you don't pass in a url string`, () => {
@@ -174,6 +182,56 @@ describe("openmrsFetch", () => {
         expect(err.responseBody).toEqual("a string response body");
         expect(err.response.status).toBe(400);
       });
+  });
+
+  it(`navigates to spa login page when the server responds with a 401`, () => {
+    mockGetConfig.mockResolvedValueOnce({
+      redirectAuthFailure: {
+        enabled: true,
+        url: "/openmrs/spa/login",
+        errors: [401]
+      }
+    });
+
+    // @ts-ignore
+    window.fetch.mockReturnValue(
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        statusText: "You are not authorized",
+        text: () => Promise.resolve("a string response body")
+      })
+    );
+
+    return openmrsFetch("/ws/rest/v1/session").then(data => {
+      //@ts-ignore
+      expect(mockNavigateToUrl.mock.calls[0][0]).toBe("/openmrs/spa/login");
+    });
+  });
+
+  it(`redirects to openmrs login page when the server responds with a 401`, () => {
+    mockGetConfig.mockResolvedValueOnce({
+      redirectAuthFailure: {
+        enabled: true,
+        url: "/openmrs/login",
+        errors: [401]
+      }
+    });
+
+    // @ts-ignore
+    window.fetch.mockReturnValue(
+      Promise.resolve({
+        ok: false,
+        status: 401,
+        statusText: "You are not authorized",
+        text: () => Promise.resolve("a string response body")
+      })
+    );
+
+    return openmrsFetch("/ws/rest/v1/session").then(data => {
+      //@ts-ignore
+      expect(window.location.assign.mock.calls[0][0]).toBe("/openmrs/login");
+    });
   });
 });
 

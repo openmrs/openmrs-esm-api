@@ -1,5 +1,7 @@
 import isPlainObject from "lodash-es/isPlainObject";
 import { Observable } from "rxjs";
+import { getConfig } from "@openmrs/esm-module-config";
+import { navigateToUrl } from "single-spa";
 
 export function openmrsFetch<T = any>(
   url: string,
@@ -61,7 +63,7 @@ export function openmrsFetch<T = any>(
    */
   const requestStacktrace = Error();
 
-  return window.fetch(url, fetchInit as RequestInit).then(r => {
+  return window.fetch(url, fetchInit as RequestInit).then(async r => {
     const response = r as FetchResponse<T>;
     if (response.ok) {
       if (response.status === 204) {
@@ -85,33 +87,53 @@ export function openmrsFetch<T = any>(
        * to help developers understand the problem and debug
        */
 
-      // Attempt to download a response body, if it has one
-      return response.text().then(
-        responseText => {
-          let responseBody = responseText;
-          try {
-            responseBody = JSON.parse(responseText);
-          } catch (err) {
-            // Server didn't respond with json, so just go with the response text string
-          }
+      /*
+       *Redirect to given url when redirect on auth failure is enabled
+       */
+      const { redirectAuthFailure } = await getConfig("@openmrs/esm-api");
+      if (
+        redirectAuthFailure.enabled &&
+        redirectAuthFailure.errors.indexOf(response.status) >= 0
+      ) {
+        const navigatesWithInSpa = url => {
+          // @ts-ignore
+          return url.startsWith(window.getOpenmrsSpaBase());
+        };
 
-          /* Make the fetch promise go into "rejected" status, with the best
-           * possible stacktrace and error message.
-           */
-          throw new OpenmrsFetchError(
-            url,
-            response,
-            responseBody,
-            requestStacktrace
-          );
-        },
-        err => {
-          /* We weren't able to download a response body for this error.
-           * Time to just give the best possible stacktrace and error message.
-           */
-          throw new OpenmrsFetchError(url, response, null, requestStacktrace);
-        }
-      );
+        navigatesWithInSpa(redirectAuthFailure.url)
+          ? navigateToUrl(redirectAuthFailure.url)
+          : location.assign(redirectAuthFailure.url);
+
+        return new Promise<FetchResponse>(resolve => resolve());
+      } else {
+        // Attempt to download a response body, if it has one
+        return response.text().then(
+          responseText => {
+            let responseBody = responseText;
+            try {
+              responseBody = JSON.parse(responseText);
+            } catch (err) {
+              // Server didn't respond with json, so just go with the response text string
+            }
+
+            /* Make the fetch promise go into "rejected" status, with the best
+             * possible stacktrace and error message.
+             */
+            throw new OpenmrsFetchError(
+              url,
+              response,
+              responseBody,
+              requestStacktrace
+            );
+          },
+          err => {
+            /* We weren't able to download a response body for this error.
+             * Time to just give the best possible stacktrace and error message.
+             */
+            throw new OpenmrsFetchError(url, response, null, requestStacktrace);
+          }
+        );
+      }
     }
   });
 }
