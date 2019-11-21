@@ -104,7 +104,13 @@ export function openmrsFetch<T = any>(
           ? navigateToUrl(redirectAuthFailure.url)
           : location.assign(redirectAuthFailure.url);
 
-        return new Promise<FetchResponse>(resolve => resolve());
+        /* We sometimes don't really want this promise to resolve since there's no response data,
+         * nor do we want it to reject because that would trigger error handling. We instead
+         * want it to remain in pending status while the navigation occurs.
+         */
+        return redirectAuthFailure.resolvePromise
+          ? ((Promise.resolve() as unknown) as Promise<FetchResponse>)
+          : new Promise<FetchResponse>(resolve => {});
       } else {
         // Attempt to download a response body, if it has one
         return response.text().then(

@@ -12,7 +12,8 @@ defineConfigSchema("@openmrs/esm-api", {
     },
     errors: {
       default: [401]
-    }
+    },
+    resolvePromise: false
   }
 });
 

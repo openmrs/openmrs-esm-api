@@ -189,7 +189,8 @@ describe("openmrsFetch", () => {
       redirectAuthFailure: {
         enabled: true,
         url: "/openmrs/spa/login",
-        errors: [401]
+        errors: [401],
+        resolvePromise: true
       }
     });
 
@@ -214,7 +215,8 @@ describe("openmrsFetch", () => {
       redirectAuthFailure: {
         enabled: true,
         url: "/openmrs/login",
-        errors: [401]
+        errors: [401],
+        resolvePromise: true
       }
     });
 
