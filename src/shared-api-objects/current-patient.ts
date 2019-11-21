@@ -56,7 +56,7 @@ export function refetchCurrentPatient() {
   );
 }
 
-export function getCurrentPatientUuid() {
+export function getCurrentPatientUuid(): Observable<PatientUuid> {
   return currentPatientUuidSubject.asObservable();
 }
 
