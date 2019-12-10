@@ -50,6 +50,7 @@
     "eslint-config-prettier": "^6.4.0",
     "eslint-config-ts-important-stuff": "^1.0.0",
     "eslint-plugin-prettier": "^3.1.1",
+    "fast-glob": "^3.1.0",
     "fhir.js": "0.0.22",
     "fork-ts-checker-webpack-plugin": "^1.5.1",
     "husky": "^3.0.9",
@@ -70,7 +71,6 @@
     "@openmrs/esm-error-handling": "^1.1.0",
     "@openmrs/esm-module-config": "^1.1.0",
     "@types/fhir": "0.0.31",
-    "fast-glob": "^3.1.0",
     "react": "^16.11.0",
     "single-spa": "^4.4.1"
   }
