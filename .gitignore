@@ -62,3 +62,7 @@ typings/
 
 dist
 .DS_Store
+
+# Intellij integration
+*.iml
+.idea/
