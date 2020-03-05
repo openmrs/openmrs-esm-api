@@ -45,5 +45,5 @@ export { omrsBackendDependencies } from "./openmrs-backend-dependencies";
 export {
   newWorkspaceItem,
   getNewWorkspaceItem,
-  WorkspaceTab
+  WorkSpaceItem
 } from "./work-space/workspace.resource";
