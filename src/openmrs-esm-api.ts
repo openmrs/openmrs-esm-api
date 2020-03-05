@@ -41,3 +41,9 @@ export {
 } from "./shared-api-objects/user-has-access-react.component";
 
 export { omrsBackendDependencies } from "./openmrs-backend-dependencies";
+
+export {
+  newWorkspaceItem,
+  getNewWorkspaceItem,
+  WorkspaceItem
+} from "./workspace/workspace.resource";
