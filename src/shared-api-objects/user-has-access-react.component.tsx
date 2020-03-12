@@ -16,7 +16,7 @@ export default function UserHasAccessReact(props) {
   }, []);
 
   if (user) {
-    return userHasAccess(props.privilege, user) !== undefined && props.children;
+    return userHasAccess(props.privilege, user) && props.children;
   } else {
     return null;
   }

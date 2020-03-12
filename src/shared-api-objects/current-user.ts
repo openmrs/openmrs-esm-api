@@ -27,6 +27,15 @@ function getCurrentUser(
   ) as Observable<LoggedInUser | UnauthenticatedUser>;
 }
 
+function userHasPrivilege(requiredPrivilege, user) {
+  return user.privileges.find(p => requiredPrivilege === p.display);
+}
+
+function isSuperUser(user) {
+  const superUserRole = "System Developer";
+  return user.roles.find(role => role.display === superUserRole);
+}
+
 export { getCurrentUser };
 
 export function refetchCurrentUser() {
@@ -34,7 +43,10 @@ export function refetchCurrentUser() {
 }
 
 export function userHasAccess(requiredPrivilege, user) {
-  return user.privileges.find(p => requiredPrivilege === p.display);
+  if (userHasPrivilege(requiredPrivilege, user) || isSuperUser(user)) {
+    return true;
+  }
+  return false;
 }
 
 interface CurrentUserOptions {
