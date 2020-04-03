@@ -47,3 +47,8 @@ export {
   getNewWorkspaceItem,
   WorkspaceItem
 } from "./workspace/workspace.resource";
+
+export {
+  default as ConfigurableLink
+} from "./configurable-link/configurable-link";
+export { default as navigate } from "./openmrs-navigate";
