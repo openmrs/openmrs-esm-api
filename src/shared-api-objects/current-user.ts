@@ -1,6 +1,7 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { openmrsObservableFetch, FetchResponse } from "../openmrs-fetch";
-import { mergeAll, filter, map } from "rxjs/operators";
+import { mergeAll, filter, map, tap } from "rxjs/operators";
+import i18n from "i18next";
 
 const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
   openmrsObservableFetch("/ws/rest/v1/session") as Observable<
@@ -20,6 +21,7 @@ function getCurrentUser(
 ): Observable<LoggedInUser | UnauthenticatedUser> {
   return userSubject.asObservable().pipe(
     mergeAll(),
+    tap(setUserLanguage),
     map((r: LoggedInUserFetchResponse) =>
       opts.includeAuthStatus ? r.data : r.data.user
     ),
@@ -27,13 +29,31 @@ function getCurrentUser(
   ) as Observable<LoggedInUser | UnauthenticatedUser>;
 }
 
+function setUserLanguage(sessionResponse) {
+  console.log(sessionResponse);
+  if (sessionResponse?.data?.user?.userProperties?.defaultLocale) {
+    const locale = sessionResponse.data.user.userProperties.defaultLocale;
+    const htmlLang = document.documentElement.getAttribute('lang');
+    if (locale != htmlLang) {
+      document.documentElement.setAttribute('lang', locale);
+    }
+    
+      // (i18n.default || i18n)
+      //   .changeLanguage(locale)
+      //   .then(() => console.log("set language to " + locale))
+      //   .catch((e) => {
+      //     console.error("Failed to set language to " + locale);
+      //   });
+  }
+}
+
 function userHasPrivilege(requiredPrivilege, user) {
-  return user.privileges.find(p => requiredPrivilege === p.display);
+  return user.privileges.find((p) => requiredPrivilege === p.display);
 }
 
 function isSuperUser(user) {
   const superUserRole = "System Developer";
-  return user.roles.find(role => role.display === superUserRole);
+  return user.roles.find((role) => role.display === superUserRole);
 }
 
 export { getCurrentUser };
