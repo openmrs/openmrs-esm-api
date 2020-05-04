@@ -32,13 +32,9 @@ export {
   refetchCurrentPatient,
   getCurrentPatientUuid
 } from "./shared-api-objects/current-patient";
-export {
-  useCurrentPatient
-} from "./shared-api-objects/use-current-patient.hook";
+export { useCurrentPatient } from "./shared-api-objects/use-current-patient.hook";
 
-export {
-  default as UserHasAccessReact
-} from "./shared-api-objects/user-has-access-react.component";
+export { default as UserHasAccessReact } from "./shared-api-objects/user-has-access-react.component";
 
 export { omrsBackendDependencies } from "./openmrs-backend-dependencies";
 

@@ -30,30 +30,27 @@ function getCurrentUser(
 }
 
 function setUserLanguage(sessionResponse) {
-  console.log(sessionResponse);
   if (sessionResponse?.data?.user?.userProperties?.defaultLocale) {
     const locale = sessionResponse.data.user.userProperties.defaultLocale;
-    const htmlLang = document.documentElement.getAttribute('lang');
-    if (locale != htmlLang) {
-      document.documentElement.setAttribute('lang', locale);
+    //@ts-ignore
+    const i18nInstance = i18n.default || i18n;
+    if (locale != i18nInstance.language) {
+      i18nInstance.changeLanguage(locale).catch(e => {
+        console.error(
+          "Failed to set language to user's preferred language: " + locale
+        );
+      });
     }
-    
-      // (i18n.default || i18n)
-      //   .changeLanguage(locale)
-      //   .then(() => console.log("set language to " + locale))
-      //   .catch((e) => {
-      //     console.error("Failed to set language to " + locale);
-      //   });
   }
 }
 
 function userHasPrivilege(requiredPrivilege, user) {
-  return user.privileges.find((p) => requiredPrivilege === p.display);
+  return user.privileges.find(p => requiredPrivilege === p.display);
 }
 
 function isSuperUser(user) {
   const superUserRole = "System Developer";
-  return user.roles.find((role) => role.display === superUserRole);
+  return user.roles.find(role => role.display === superUserRole);
 }
 
 export { getCurrentUser };
