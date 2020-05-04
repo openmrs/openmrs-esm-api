@@ -7,7 +7,7 @@
     "test": "jest",
     "start": "webpack-dev-server",
     "start-https": "webpack-dev-server --https",
-    "build": "rimraf dist && concurrently -n webpack,typescript 'webpack --mode=production' 'npm run typescript -- --declaration --module system'",
+    "build": "rimraf dist && concurrently -n webpack,typescript 'webpack --mode=production' 'npm run typescript",
     "build-webpack": "webpack --mode=production",
     "typescript": "tsc",
     "prettier": "prettier 'src/**/*' --write",
