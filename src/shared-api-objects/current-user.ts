@@ -32,13 +32,15 @@ function getCurrentUser(
 function setUserLanguage(sessionResponse) {
   if (sessionResponse?.data?.user?.userProperties?.defaultLocale) {
     const locale = sessionResponse.data.user.userProperties.defaultLocale;
-    //@ts-ignore
-    const i18nInstance = i18n.default || i18n;
-    if (locale != i18nInstance.language) {
-      i18nInstance.changeLanguage(locale).catch(e => {
+    const htmlLang = document.documentElement.getAttribute("lang");
+    if (locale != htmlLang) {
+      document.documentElement.setAttribute("lang", locale);
+      //@ts-ignore
+      (i18n.default || i18n).changeLanguage().catch(e => {
         console.error(
-          "Failed to set language to user's preferred language: " + locale
+          `Failed to set language after updating HTML 'lang' tag to user's preferred language ${locale}`
         );
+        console.error(e);
       });
     }
   }
