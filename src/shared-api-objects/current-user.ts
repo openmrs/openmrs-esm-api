@@ -35,13 +35,6 @@ function setUserLanguage(sessionResponse) {
     const htmlLang = document.documentElement.getAttribute("lang");
     if (locale != htmlLang) {
       document.documentElement.setAttribute("lang", locale);
-      //@ts-ignore
-      (i18n.default || i18n).changeLanguage().catch(e => {
-        console.error(
-          `Failed to set language after updating HTML 'lang' tag to user's preferred language ${locale}`
-        );
-        console.error(e);
-      });
     }
   }
 }
