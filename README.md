@@ -1,7 +1,7 @@
 # openmrs-esm-api
 [![Build Status](https://travis-ci.org/openmrs/openmrs-esm-api.svg?branch=master)](https://travis-ci.org/openmrs/openmrs-esm-api)
 
-[Wiki documentation](https://wiki.openmrs.org/display/projects/openmrs-esm-api)
+An [OpenMRS Microfrontend](https://wiki.openmrs.org/display/projects/Frontend+-+SPA+and+Microfrontends).
 
 ## What is this?
 
@@ -9,7 +9,7 @@ openmrs-esm-api is an [in-browser javascript module](https://github.com/openmrs/
 
 ## How do I use it?
 
-```
+```js
 import { openmrsFetch, openmrsObservableFetch, getCurrentUser, fhir } from '@openmrs/esm-api';
 openmrsFetch('/ws/rest/v1/session').then(response => {
   console.log(response.data.authenticated)
@@ -39,7 +39,7 @@ A [Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Gl
 
 ### Example
 
-```
+```js
 import { openmrsFetch } from '@openmrs/esm-api'
 const abortController = new AbortController();
 openmrsFetch('/ws/rest/v1/session', {signal: abortController.signal})
@@ -77,7 +77,7 @@ An Observable that produces exactly one Response object. The response object is 
 
 ### Example
 
-```
+```js
 import { openmrsObservableFetch } from '@openmrs/esm-api'
 const subscription = openmrsObservableFetch('/ws/rest/v1/session').subscribe(
   response => console.log(response.data),
@@ -109,7 +109,7 @@ An Observable that produces zero or more values (as described above). The values
 
 ### Example
 
-```
+```js
 import { getCurrentUser } from '@openmrs/esm-api'
 const subscription = getCurrentUser().subscribe(
   user => console.log(user)
@@ -138,7 +138,7 @@ An observable exactly the same as if you had called `getCurrentUser()`.
 
 #### Example
 
-```
+```js
 import { refetchCurrentUser } from '@openmrs/esm-api'
 refetchCurrentUser()
 ```
