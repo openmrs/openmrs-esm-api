@@ -1,8 +1,6 @@
 # openmrs-esm-api
 [![Build Status](https://travis-ci.org/openmrs/openmrs-esm-api.svg?branch=master)](https://travis-ci.org/openmrs/openmrs-esm-api)
 
-[Wiki documentation](https://wiki.openmrs.org/display/projects/openmrs-esm-api)
-
 ## What is this?
 
 openmrs-esm-api is an [in-browser javascript module](https://github.com/openmrs/openmrs-rfc-frontend/blob/master/text/0002-modules.md) that exports functions that interact with the OpenMRS API.
