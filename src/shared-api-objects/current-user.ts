@@ -1,7 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { openmrsObservableFetch, FetchResponse } from "../openmrs-fetch";
 import { mergeAll, filter, map, tap } from "rxjs/operators";
-import i18n from "i18next";
 
 const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
   openmrsObservableFetch("/ws/rest/v1/session") as Observable<
