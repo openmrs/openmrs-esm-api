@@ -1,6 +1,6 @@
 import { BehaviorSubject, Observable } from "rxjs";
 import { openmrsObservableFetch, FetchResponse } from "../openmrs-fetch";
-import { mergeAll, filter, map } from "rxjs/operators";
+import { mergeAll, filter, map, tap } from "rxjs/operators";
 
 const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
   openmrsObservableFetch("/ws/rest/v1/session") as Observable<
@@ -20,11 +20,22 @@ function getCurrentUser(
 ): Observable<LoggedInUser | UnauthenticatedUser> {
   return userSubject.asObservable().pipe(
     mergeAll(),
+    tap(setUserLanguage),
     map((r: LoggedInUserFetchResponse) =>
       opts.includeAuthStatus ? r.data : r.data.user
     ),
     filter(Boolean)
   ) as Observable<LoggedInUser | UnauthenticatedUser>;
+}
+
+function setUserLanguage(sessionResponse) {
+  if (sessionResponse?.data?.user?.userProperties?.defaultLocale) {
+    const locale = sessionResponse.data.user.userProperties.defaultLocale;
+    const htmlLang = document.documentElement.getAttribute("lang");
+    if (locale != htmlLang) {
+      document.documentElement.setAttribute("lang", locale);
+    }
+  }
 }
 
 function userHasPrivilege(requiredPrivilege, user) {
