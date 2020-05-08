@@ -40,7 +40,7 @@ export {
   default as UserHasAccessReact
 } from "./shared-api-objects/user-has-access-react.component";
 
-export { omrsBackendDependencies } from "./openmrs-backend-dependencies";
+export { backendDependencies } from "./openmrs-backend-dependencies";
 
 export {
   newWorkspaceItem,
