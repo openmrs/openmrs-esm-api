@@ -11,7 +11,10 @@ describe("openmrsFetch", () => {
     // @ts-ignore
     window.getOpenmrsSpaBase = () => "/openmrs/spa/";
     window.fetch = jest.fn();
-    window.location.assign = jest.fn();
+    Object.defineProperty(window, "location", {
+      writable: true,
+      value: { assign: jest.fn() }
+    });
   });
 
   afterEach(() => {
