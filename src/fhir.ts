@@ -1,9 +1,7 @@
 import makeFhir from "./fhirjs";
 import { openmrsFetch, FetchHeaders, OpenmrsFetchError } from "./openmrs-fetch";
 
-export const fhirConfig = {
-  baseUrl: `/ws/fhir2/R4`
-};
+export const fhirBaseUrl = `/ws/fhir2/R4`;
 
 const openmrsFhirAdapter = {
   http(requestObj: FHIRRequestObj) {
@@ -31,7 +29,7 @@ const openmrsFhirAdapter = {
   }
 };
 
-export const fhir = makeFhir(fhirConfig, openmrsFhirAdapter);
+export const fhir = makeFhir({ baseUrl: fhirBaseUrl }, openmrsFhirAdapter);
 
 type FHIRRequestObj = {
   url: string;
