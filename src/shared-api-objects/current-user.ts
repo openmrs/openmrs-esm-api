@@ -1,12 +1,11 @@
-import { BehaviorSubject, Observable } from "rxjs";
-import { openmrsObservableFetch, FetchResponse } from "../openmrs-fetch";
-import { mergeAll, filter, map, tap } from "rxjs/operators";
+import { Observable, ReplaySubject } from "rxjs";
+import { FetchResponse, openmrsFetch } from "../openmrs-fetch";
+import { filter, map, tap, mergeAll } from "rxjs/operators";
 
-const userSubject = new BehaviorSubject<Observable<LoggedInUserFetchResponse>>(
-  openmrsObservableFetch("/ws/rest/v1/session") as Observable<
-    LoggedInUserFetchResponse
-  >
-);
+const userSubject = new ReplaySubject<Promise<LoggedInUserFetchResponse>>(1);
+let lastFetchTimeMillis: number = 0;
+
+refetchCurrentUser();
 
 function getCurrentUser(): Observable<LoggedInUser>;
 function getCurrentUser(
@@ -18,6 +17,9 @@ function getCurrentUser(
 function getCurrentUser(
   opts: CurrentUserOptions = { includeAuthStatus: false }
 ): Observable<LoggedInUser | UnauthenticatedUser> {
+  if (lastFetchTimeMillis < Date.now() - 1000 * 60) {
+    refetchCurrentUser();
+  }
   return userSubject.asObservable().pipe(
     mergeAll(),
     tap(setUserLanguage),
@@ -50,7 +52,8 @@ function isSuperUser(user) {
 export { getCurrentUser };
 
 export function refetchCurrentUser() {
-  userSubject.next(openmrsObservableFetch("/ws/rest/v1/session"));
+  lastFetchTimeMillis = Date.now();
+  userSubject.next(openmrsFetch("/ws/rest/v1/session"));
 }
 
 export function userHasAccess(requiredPrivilege, user) {
