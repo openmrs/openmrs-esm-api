@@ -1,9 +1,9 @@
 import { ReplaySubject, Observable } from "rxjs";
 import { fhir } from "../fhir";
 import { mergeAll, filter, map } from "rxjs/operators";
-import { FetchResponse } from "../openmrs-fetch";
+import { FetchResponse } from "../types";
 
-let currentPatientUuid;
+let currentPatientUuid: string;
 const currentPatientUuidSubject = new ReplaySubject<PatientUuid>(1);
 const currentPatientSubject = new ReplaySubject<
   Promise<{ data: fhir.Patient }>
@@ -12,7 +12,7 @@ const currentPatientSubject = new ReplaySubject<
 window.addEventListener("single-spa:routing-event", () => {
   const u = getPatientUuidFromUrl();
 
-  if (u !== currentPatientUuid) {
+  if (u && u !== currentPatientUuid) {
     currentPatientUuid = u;
     currentPatientUuidSubject.next(u);
 

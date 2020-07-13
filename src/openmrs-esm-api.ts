@@ -19,6 +19,7 @@ defineConfigSchema("@openmrs/esm-api", {
   }
 });
 
+export * from "./types";
 export { openmrsFetch, openmrsObservableFetch } from "./openmrs-fetch";
 export { fhir, fhirBaseUrl } from "./fhir";
 export {
