@@ -1,23 +1,29 @@
 import React from "react";
 import { getCurrentUser, userHasAccess } from "./current-user";
+import { LoggedInUser } from "../types";
 
-export default function UserHasAccessReact(props) {
-  const [user, setUser] = React.useState(null);
+export interface UserHasAccessReactProps {
+  privilege: string;
+}
+
+const UserHasAccessReact: React.FC<UserHasAccessReactProps> = ({
+  privilege,
+  children
+}) => {
+  const [user, setUser] = React.useState<LoggedInUser | null>(null);
 
   React.useEffect(() => {
-    const subscription = getCurrentUser({ includeAuthStatus: false }).subscribe(
-      (x: any) => {
-        setUser(x);
-      }
-    );
-    return () => {
-      subscription.unsubscribe();
-    };
+    const subscription = getCurrentUser({
+      includeAuthStatus: false
+    }).subscribe(setUser);
+    return () => subscription.unsubscribe();
   }, []);
 
-  if (user) {
-    return userHasAccess(props.privilege, user) && props.children;
-  } else {
-    return null;
+  if (user && userHasAccess(privilege, user)) {
+    return <>{children}</>;
   }
-}
+
+  return null;
+};
+
+export default UserHasAccessReact;

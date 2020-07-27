@@ -1,7 +1,8 @@
-import isPlainObject from "lodash-es/isPlainObject";
 import { Observable } from "rxjs";
-import { getConfig } from "@openmrs/esm-module-config";
 import { navigateToUrl } from "single-spa";
+import isPlainObject from "lodash-es/isPlainObject";
+import { getConfig } from "@openmrs/esm-module-config";
+import { FetchResponse } from "./types";
 
 export function openmrsFetch<T = any>(
   url: string,
@@ -197,10 +198,6 @@ export class OpenmrsFetchError extends Error {
   }
   response: Response;
   responseBody: string | FetchResponseJson | null;
-}
-
-export interface FetchResponse<T = any> extends Response {
-  data: T;
 }
 
 interface FetchConfig extends Omit<Omit<RequestInit, "body">, "headers"> {
