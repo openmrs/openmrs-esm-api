@@ -1,8 +1,8 @@
 import React from "react";
+import { renderExtension } from "@openmrs/esm-extension-manager";
 
 export interface ExtensionSlotReactProps {
   name: string;
-  params: any;
 }
 
 declare global {
@@ -19,15 +19,12 @@ interface CancelLoading {
   (): void;
 }
 
-const ExtensionSlotReact: React.FC<ExtensionSlotReactProps> = ({
-  name,
-  params
-}) => {
+const ExtensionSlotReact = ({ name }: ExtensionSlotReactProps) => {
   const ref = React.useRef<HTMLSlotElement>(null);
 
   React.useEffect(() => {
     if (ref.current) {
-      return window.renderOpenmrsExtension(ref.current, name, params);
+      return renderExtension(ref.current, name, {});
     }
   }, []);
 
