@@ -36,7 +36,6 @@ export {
 export { useCurrentPatient } from "./shared-api-objects/use-current-patient.hook";
 
 export { default as UserHasAccessReact } from "./shared-api-objects/user-has-access-react.component";
-export { default as ExtensionSlotReact } from "./shared-api-objects/extension-slot-react.component";
 
 export { backendDependencies } from "./openmrs-backend-dependencies";
 
